@@ -36,20 +36,21 @@ stage('Checkout') {
                 extensions: [
                     [$class: 'PruneStaleBranch'],
                     [$class: 'CleanBeforeCheckout'],
-                    [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],  // Убираем fetchTags
+                    [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],
                     [$class: 'CheckoutOption', timeout: 20]
                 ],
                 submoduleCfg: [],
                 userRemoteConfigs: [
                     [
                         url: scm.userRemoteConfigs[0].url,
-                        refspec: "+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*"  // Обязательно теги
+                        refspec: "+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*"
                     ]
                 ]
             ])
         }
     }
 }
+
 
         stage('Prepare parameters') {
             steps {
