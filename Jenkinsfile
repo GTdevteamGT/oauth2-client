@@ -26,30 +26,30 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: scm.branches,
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [
-                            [$class: 'PruneStaleBranch'],
-                            [$class: 'CleanBeforeCheckout'],
-                            [$class: 'CloneOption', depth: 1, noTags: false, shallow: true, fetchTags: true],
-                            [$class: 'CheckoutOption', timeout: 20]
-                        ],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [
-                            [
-                                url: scm.userRemoteConfigs[0].url,
-                                refspec: "+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*"
-                            ]
-                        ]
-                    ])
-                }
-            }
+stage('Checkout') {
+    steps {
+        script {
+            checkout([
+                $class: 'GitSCM',
+                branches: scm.branches,
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [
+                    [$class: 'PruneStaleBranch'],
+                    [$class: 'CleanBeforeCheckout'],
+                    [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],  // Убираем fetchTags
+                    [$class: 'CheckoutOption', timeout: 20]
+                ],
+                submoduleCfg: [],
+                userRemoteConfigs: [
+                    [
+                        url: scm.userRemoteConfigs[0].url,
+                        refspec: "+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*"  // Обязательно теги
+                    ]
+                ]
+            ])
         }
+    }
+}
 
         stage('Prepare parameters') {
             steps {
