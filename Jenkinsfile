@@ -36,7 +36,7 @@ pipeline {
                         extensions: [
                             [$class: 'PruneStaleBranch'],
                             [$class: 'CleanBeforeCheckout'],
-                            [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],
+                            [$class: 'CloneOption', depth: 1, noTags: false, shallow: true, fetchTags: true],
                             [$class: 'CheckoutOption', timeout: 20]
                         ],
                         submoduleCfg: [],
