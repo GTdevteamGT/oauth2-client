@@ -29,21 +29,31 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                script {
-                    checkout([
+    steps {
+        script {
+            checkout([
                 $class: 'GitSCM',
                 branches: scm.branches,
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [
                     [$class: 'PruneStaleBranch'],
                     [$class: 'CleanBeforeCheckout'],
-                    [$class: 'CloneOption', depth: 1, shallow: true],
-                    [$class: 'CloneOption', fetchTags: true]
+                    [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],
+                    [$class: 'UserMergeOptions', mergeRemote: 'origin', mergeTarget: 'FETCH_HEAD'],
+                    [$class: 'GitSCMSourceDefaults'],
+                    [$class: 'CheckoutOption', timeout: 20]
                 ],
                 submoduleCfg: [],
-                        userRemoteConfigs: scm.userRemoteConfigs
-                    ])
+                userRemoteConfigs: [
+                    [
+                        url: scm.userRemoteConfigs[0].url,
+                        refspec: "+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*"
+                    ]
+                ]
+            ])
+        }
+    }
+}
                 }
             }
         }
@@ -51,7 +61,7 @@ pipeline {
         stage('Prepare parameters') {
             steps {
                 script {
-                    OAUTH2_VERSION = sh(script: "git describe --tags --abbrev=0 || echo ''", returnStdout: true).trim()
+                    OAUTH2_VERSION = sh(script: "git describe --exact-match --tags \$(git rev-parse HEAD) || echo ''", returnStdout: true).trim()
                     
                     if (OAUTH2_VERSION == '') {
                         echo 'No tag found. Skipping build.'
