@@ -1,7 +1,6 @@
 def CURRENT_DATE = new Date().format('yyyyMMdd')
 def COMMIT_AUTHOR_NAME = ''
 def BUILD_TRIGGERED_BY = ''
-
 def OAUTH2_VERSION = ''
 
 pipeline {
@@ -23,38 +22,34 @@ pipeline {
         REGISTRY_URL = 'https://gtec-481745976483.d.codeartifact.eu-north-1.amazonaws.com/npm/npm-aws/'
         REGISTRY_ENDPOINT = 'https://gtec-481745976483.d.codeartifact.eu-north-1.amazonaws.com/npm/npm-aws/'
         DOMAIN_OWNER = '481745976483'
-        OAUTH2_VERSION = ''
         REPOSITORY_NAME = 'npm-aws'
     }
 
     stages {
         stage('Checkout') {
-    steps {
-        script {
-            checkout([
-                $class: 'GitSCM',
-                branches: scm.branches,
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [
-                    [$class: 'PruneStaleBranch'],
-                    [$class: 'CleanBeforeCheckout'],
-                    [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],
-                    [$class: 'CheckoutOption', timeout: 20]
-                ],
-                submoduleCfg: [],
-                userRemoteConfigs: [
-                    [
-                        url: scm.userRemoteConfigs[0].url,
-                        refspec: "+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*"
-                    ]
-                ]
-            ])
-        }
-    }
-}
+            steps {
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: scm.branches,
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'PruneStaleBranch'],
+                            [$class: 'CleanBeforeCheckout'],
+                            [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],
+                            [$class: 'CheckoutOption', timeout: 20]
+                        ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [
+                            [
+                                url: scm.userRemoteConfigs[0].url,
+                                refspec: "+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*"
+                            ]
+                        ]
+                    ])
                 }
             }
-
+        }
 
         stage('Prepare parameters') {
             steps {
@@ -104,16 +99,19 @@ pipeline {
             }
             steps {
                 sh '''
+                    set -e
                     docker ps -q --filter ancestor=${REGISTRY_URL}/${REPOSITORY_NAME}:${OAUTH2_VERSION} | xargs -r docker stop
                     docker rmi ${REGISTRY_URL}/${REPOSITORY_NAME}:${OAUTH2_VERSION} || true
-                    '''
+                '''
             }
         }
+    }
 
     post {
-        cleanup {
+        always {
             node('docker-ci-stage') {
                 cleanWs()
             }
         }
     }
+}
