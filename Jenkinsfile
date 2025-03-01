@@ -29,9 +29,9 @@ pipeline {
 
     stages {
         stage('Checkout') {
-    steps {
-        script {
-            checkout([
+            steps {
+                script {
+                    checkout([
                 $class: 'GitSCM',
                 branches: scm.branches,
                 doGenerateSubmoduleConfigurations: false,
@@ -41,14 +41,11 @@ pipeline {
                     [$class: 'CloneOption', depth: 1, noTags: false, shallow: true]
                 ],
                 submoduleCfg: [],
-                userRemoteConfigs: scm.userRemoteConfigs
-            ])
-        }
-    }
-}
+                        userRemoteConfigs: scm.userRemoteConfigs
+                    ])
                 }
             }
-        
+        }
 
         stage('Prepare parameters') {
             steps {
@@ -103,7 +100,7 @@ pipeline {
                     '''
             }
         }
-    
+    }
 
     post {
         cleanup {
@@ -112,4 +109,4 @@ pipeline {
             }
         }
     }
-
+}
