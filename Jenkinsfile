@@ -38,7 +38,8 @@ pipeline {
                 extensions: [
                     [$class: 'PruneStaleBranch'],
                     [$class: 'CleanBeforeCheckout'],
-                    [$class: 'CloneOption', depth: 1, shallow: true]
+                    [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],
+                    [$class: 'CloneOption', fetchTags: true]
                 ],
                 submoduleCfg: [],
                         userRemoteConfigs: scm.userRemoteConfigs
