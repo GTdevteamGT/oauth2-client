@@ -48,7 +48,7 @@ pipeline {
 }
                 }
             }
-        }
+        
 
         stage('Prepare parameters') {
             steps {
