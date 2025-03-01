@@ -111,7 +111,6 @@ pipeline {
                     '''
             }
         }
-    }
 
     post {
         cleanup {
