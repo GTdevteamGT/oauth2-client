@@ -103,7 +103,7 @@ pipeline {
                     '''
             }
         }
-    }
+    
 
     post {
         cleanup {
@@ -112,4 +112,4 @@ pipeline {
             }
         }
     }
-}
+
