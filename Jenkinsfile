@@ -50,7 +50,7 @@ pipeline {
         stage('Prepare parameters') {
             steps {
                 script {
-                    OAUTH2_VERSION = sh(script: "git describe --exact-match --tags \$(git rev-parse HEAD) || echo ''", returnStdout: true).trim()
+                    OAUTH2_VERSION = sh(script: "git describe --tags --abbrev=0 || echo ''", returnStdout: true).trim()
                     
                     if (OAUTH2_VERSION == '') {
                         echo 'No tag found. Skipping build.'
