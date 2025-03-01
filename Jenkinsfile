@@ -39,8 +39,6 @@ pipeline {
                     [$class: 'PruneStaleBranch'],
                     [$class: 'CleanBeforeCheckout'],
                     [$class: 'CloneOption', depth: 1, noTags: false, shallow: true],
-                    [$class: 'UserMergeOptions', mergeRemote: 'origin', mergeTarget: 'FETCH_HEAD'],
-                    [$class: 'GitSCMSourceDefaults'],
                     [$class: 'CheckoutOption', timeout: 20]
                 ],
                 submoduleCfg: [],
