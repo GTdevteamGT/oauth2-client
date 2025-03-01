@@ -1,6 +1,7 @@
 def CURRENT_DATE = new Date().format('yyyyMMdd')
 def COMMIT_AUTHOR_NAME = ''
 def BUILD_TRIGGERED_BY = ''
+
 def OAUTH2_VERSION = ''
 
 pipeline {
@@ -28,19 +29,23 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: scm.branches,
-                        extensions: scm.extensions + [
-                            [$class: 'CloneOption', noTags: false, depth: 1, shallow: true],
-                            [$class: 'PruneStaleBranch'],
-                            [$class: 'CleanBeforeCheckout'],
-                            [$class: 'CloneOption', fetchTags: true]
-                        ],
-                        userRemoteConfigs: scm.userRemoteConfigs
-                    ])
+    steps {
+        script {
+            checkout([
+                $class: 'GitSCM',
+                branches: scm.branches,
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [
+                    [$class: 'PruneStaleBranch'],
+                    [$class: 'CleanBeforeCheckout'],
+                    [$class: 'CloneOption', depth: 1, noTags: false, shallow: true]
+                ],
+                submoduleCfg: [],
+                userRemoteConfigs: scm.userRemoteConfigs
+            ])
+        }
+    }
+}
                 }
             }
         }
@@ -48,14 +53,8 @@ pipeline {
         stage('Prepare parameters') {
             steps {
                 script {
-                    // Отладочная информация: какие теги вообще видит Jenkins?
-                    sh "git fetch --tags"
-                    sh "git tag"
-
-                    // Получаем тег коммита
-                    OAUTH2_VERSION = sh(script: "git describe --tags --abbrev=0 || echo ''", returnStdout: true).trim()
-
-
+                    OAUTH2_VERSION = sh(script: "git describe --exact-match --tags \$(git rev-parse HEAD) || echo ''", returnStdout: true).trim()
+                    
                     if (OAUTH2_VERSION == '') {
                         echo 'No tag found. Skipping build.'
                         return
@@ -63,7 +62,7 @@ pipeline {
                         OAUTH2_VERSION = OAUTH2_VERSION.replaceAll(/^v\.?/, '')
                         echo "Processed Tag: ${OAUTH2_VERSION}"
                     }
-
+                    
                     COMMIT_AUTHOR_NAME = sh(script: "git log -n 1 ${env.GIT_COMMIT} --format=%aN", returnStdout: true).trim()
                     BUILD_TRIGGERED_BY = currentBuild.getBuildCauses()[0].shortDescription
                 }
@@ -75,7 +74,7 @@ pipeline {
                 expression { OAUTH2_VERSION != '' }
             }
             steps {
-                withAWS(credentials: 'AWSCodeArtifactCredentials') {
+                withAWS(credentials: 'aws-credentials') {
                     script {
                         sh '''
                         docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
