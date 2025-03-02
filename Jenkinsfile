@@ -75,7 +75,6 @@ stage('Checkout') {
             steps {
                 script {
                     env.OAUTH2_VERSION = sh(script: "git describe --tags --always --abbrev=0 || echo ''", returnStdout: true).trim()
-                    echo "Incoming variable: ${env.OAUTH2_VERSION}"
                 }
             }
          }  
@@ -95,7 +94,7 @@ stage('Checkout') {
                 withAWS(credentials: 'AWSCodeArtifactCredentials') {
                     script {
                         sh '''
-                        echo "Env var: ${env.OAUTH2_VERSION}"
+                        echo 'Env var: ${OAUTH2_VERSION}'
                         docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                                      --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
                                      --build-arg REGION=${REGION} \
