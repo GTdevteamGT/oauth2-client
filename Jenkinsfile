@@ -59,11 +59,11 @@ stage('Checkout') {
                 script {
                     env.OAUTH2_VERSION = sh(script: "git describe --tags --always --abbrev=0 || echo ''", returnStdout: true).trim()
                     
-                    if (env.OAUTH2_VERSION == '') {
+                    if (OAUTH2_VERSION == '') {
                         echo 'Pipe message: No tag found. Skipping build.'
                         return
                     } else {
-                        env.OAUTH2_VERSION = env.OAUTH2_VERSION.replaceAll(/^v\.?/, '')
+                        OAUTH2_VERSION = OAUTH2_VERSION.replaceAll(/^v\.?/, '')
                         echo "Pipe message: Processed Tag: ${OAUTH2_VERSION}"
                     }
                     
@@ -94,7 +94,7 @@ stage('Checkout') {
                                      --build-arg REGISTRY_URL=${REGISTRY_URL} \
                                      --build-arg REGISTRY_ENDPOINT=${REGISTRY_ENDPOINT} \
                                      --build-arg DOMAIN_OWNER=${DOMAIN_OWNER} \
-                                     --build-arg OAUTH2_VERSION=${env.OAUTH2_VERSION} \
+                                     --build-arg OAUTH2_VERSION=${OAUTH2_VERSION} \
                                      --build-arg REPOSITORY_NAME=${REPOSITORY_NAME} \
                                      -t oauth2-client:momentary .
                         '''
