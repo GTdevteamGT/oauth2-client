@@ -75,6 +75,13 @@ stage('Checkout') {
             steps {
                 script {
                     env.OAUTH2_VERSION = sh(script: "git tag | tail -n1 || echo ''", returnStdout: true).trim()
+                    if (env.OAUTH2_VERSION == '') {
+                        echo 'Pipe message: No tag found. Skipping build.'
+                        return
+                    } else {
+                        OAUTH2_VERSION = OAUTH2_VERSION.replaceAll(/^v\.?/, '')
+                        echo "Pipe message: Processed Tag: ${OAUTH2_VERSION}"
+                   }
                 }
             }
          }  
