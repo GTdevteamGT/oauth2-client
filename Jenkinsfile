@@ -84,14 +84,14 @@ stage('Checkout') {
                 withAWS(credentials: 'AWSCodeArtifactCredentials') {
                     script {
                         sh '''
-                        echo 'Env var: ${env.OAUTH2_VERSION}'
+                        echo 'Env var: ${OAUTH2_VERSION}'
                         docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                                      --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
                                      --build-arg REGION=${REGION} \
                                      --build-arg REGISTRY_URL=${REGISTRY_URL} \
                                      --build-arg REGISTRY_ENDPOINT=${REGISTRY_ENDPOINT} \
                                      --build-arg DOMAIN_OWNER=${DOMAIN_OWNER} \
-                                     --build-arg OAUTH2_VERSION=${env.OAUTH2_VERSION} \
+                                     --build-arg OAUTH2_VERSION=${OAUTH2_VERSION} \
                                      --build-arg REPOSITORY_NAME=${REPOSITORY_NAME} \
                                      -t oauth2-client:momentary .
                         '''
