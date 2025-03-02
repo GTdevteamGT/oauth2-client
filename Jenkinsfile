@@ -1,4 +1,4 @@
-
+v.
 def CURRENT_DATE = new Date().format('yyyyMMdd')
 def COMMIT_AUTHOR_NAME = ''
 def BUILD_TRIGGERED_BY = ''
@@ -90,12 +90,13 @@ stage('Checkout') {
 
         stage('Build Docker Image') {
             when {
-                expression { OAUTH2_VERSION != '' }
+                expression { env.OAUTH2_VERSION != '' }
             }
             steps {
                 withAWS(credentials: 'AWSCodeArtifactCredentials') {
                     script {
                         sh '''
+                        echo "Env var: ${env.OAUTH2_VERSION}"
                         docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                                      --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
                                      --build-arg REGION=${REGION} \
