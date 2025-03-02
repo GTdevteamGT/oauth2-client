@@ -60,7 +60,7 @@ RUN git config --global user.name "John Doe"
 
 #Changing package version
 RUN export OAUTH2_VERSION=${OAUTH2_VERSION}
-RUN npm version
+RUN npm version ${OAUTH2_VERSION}
 RUN npm install ; npm run prepublishOnly
 
 # Retrieve CodeArtifact authorization token, log in to CodeArtifact,
