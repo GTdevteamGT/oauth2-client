@@ -63,7 +63,7 @@ stage('Checkout') {
                         echo 'Pipe message: No tag found. Skipping build.'
                         return
                     } else {
-                        env.OAUTH2_VERSION = env.OAUTH2_VERSION.replaceAll(/^v\.?/, '')
+                        OAUTH2_VERSION = OAUTH2_VERSION.replaceAll(/^v\.?/, '')
                         echo "Pipe message: Processed Tag: ${OAUTH2_VERSION}"
                     }
                     
