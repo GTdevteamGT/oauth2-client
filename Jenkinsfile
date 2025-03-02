@@ -71,7 +71,7 @@ stage('Checkout') {
         stage('Preparing archive') {
             steps {
                 script {
-                    sh 'tar -cf oauth2-client.tar --exclude oauth2-client.tar .'
+                    sh 'tar -cf oauth2-client.tar --exclude oauth2-client.tar --exclude .git* .'
                 }
             }
         }
