@@ -67,4 +67,5 @@ RUN HOST=$(echo ${REGISTRY_URL} | sed 's~https://~~')
 RUN npm config set //"${HOST}":_authToken=${CODEARTIFACT_AUTH_TOKEN} 
 RUN npm config set registry ${REGISTRY_URL} 
 RUN npm version ${OAUTH2_VERSION} ;
+RUN echo ${OAUTH2_VERSION}
 RUN npm publish --registry ${REGISTRY_URL}
