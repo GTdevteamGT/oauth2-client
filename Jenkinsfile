@@ -76,8 +76,8 @@ stage('Checkout') {
          stage('Check OAUTH2 Version') {
             steps {
                 script {
-                    env.OAUTH2_VERSION = sh(script: "git describe --tags --always --abbrev=0 || echo ''", returnStdout: true).trim()
-                    echo 'Incoming variable: $OAUTH2_VERSION'
+                    ${env.OAUTH2_VERSION} = sh(script: "git describe --tags --always --abbrev=0 || echo ''", returnStdout: true).trim()
+                    echo 'Incoming variable: ${env.OAUTH2_VERSION}'
                 }
             }
          }  
