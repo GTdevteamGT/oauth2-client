@@ -51,10 +51,7 @@ RUN tar xfv oauth2-client.tar
 RUN git config --global --add safe.directory /app
 RUN git config --global user.email "nobody@nowhere.com"
 RUN git config --global user.name "John Doe"
-RUN npm install
-RUN npm version ${OAUTH2_VERSION}
-RUN cat package.json
-RUN npm run prepublishOnly
+RUN npm install ; npm version ${OAUTH2_VERSION} ; cat package.json; npm run prepublishOnly
 
 # Retrieve CodeArtifact authorization token, log in to CodeArtifact,
 # configure npm authentication, and publish the package.
