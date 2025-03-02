@@ -37,7 +37,7 @@ ENV repository_name=${REPOSITORY_NAME}
 
 # Install AWS CLI using curl 
 RUN apt-get update 
-RUN  apt-get install -y curl unzip sh bash
+RUN  apt-get install -y curl unzip bash
 RUN  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
 RUN  unzip -q awscliv2.zip 
 RUN  ./aws/install 
