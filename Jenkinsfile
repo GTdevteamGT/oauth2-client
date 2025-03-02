@@ -80,7 +80,7 @@ stage('Checkout') {
                     echo 'Incoming variable: $OAUTH2_VERSION'
                 }
             }
-             
+         }  
         stage('Preparing archive') {
             steps {
                 script {
