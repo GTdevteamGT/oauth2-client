@@ -59,9 +59,8 @@ RUN git config --global user.email "nobody@nowhere.com"
 RUN git config --global user.name "John Doe"
 
 #Changing package version
-RUN git clean -fd
 RUN export oauth2_version=${OAUTH2_VERSION}
-RUN npm version ${oauth2_version}
+RUN git clean -fd; npm version ${oauth2_version}
 RUN npm install ; npm run prepublishOnly
 
 # Retrieve CodeArtifact authorization token, log in to CodeArtifact,
