@@ -53,8 +53,15 @@ RUN git config --global user.email "nobody@nowhere.com"
 RUN git config --global user.name "John Doe"
 RUN npm install
 RUN npm version ${OAUTH2_VERSION}
+RUN cat package.json
 RUN npm run prepublishOnly
 
 # Retrieve CodeArtifact authorization token, log in to CodeArtifact,
 # configure npm authentication, and publish the package.
-RUN CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain gtec --domain-owner ${DOMAIN_OWNER} --region ${REGION} --query authorizationToken --output text) && CODEARTIFACT_ENDPOINT=${REGISTRY_ENDPOINT} && aws codeartifact login --tool npm --repository ${REPOSITORY_NAME} --domain gtec --domain-owner ${DOMAIN_OWNER} --region ${REGION} && HOST=$(echo ${REGISTRY_URL} | sed 's~https://~~') && npm config set //"${HOST}":_authToken=${CODEARTIFACT_AUTH_TOKEN} && npm config set registry ${REGISTRY_URL} && npm publish --registry ${REGISTRY_URL}
+RUN CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain gtec --domain-owner ${DOMAIN_OWNER} --region ${REGION} --query authorizationToken --output text)
+RUN CODEARTIFACT_ENDPOINT=${REGISTRY_ENDPOINT} 
+RUN aws codeartifact login --tool npm --repository ${REPOSITORY_NAME} --domain gtec --domain-owner ${DOMAIN_OWNER} --region ${REGION} 
+RUN HOST=$(echo ${REGISTRY_URL} | sed 's~https://~~') 
+RUN npm config set //"${HOST}":_authToken=${CODEARTIFACT_AUTH_TOKEN} 
+RUN npm config set registry ${REGISTRY_URL} 
+RUN npm publish --registry ${REGISTRY_URL}
