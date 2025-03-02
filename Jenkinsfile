@@ -74,7 +74,7 @@ stage('Checkout') {
          stage('Check OAUTH2 Version') {
             steps {
                 script {
-                    env.OAUTH2_VERSION = sh(script: "git describe --tags --always --abbrev=0 || echo ''", returnStdout: true).trim()
+                    env.OAUTH2_VERSION = sh(script: "git tag | tail -n1 || echo ''", returnStdout: true).trim()
                 }
             }
          }  
