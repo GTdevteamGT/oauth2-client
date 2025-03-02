@@ -39,7 +39,7 @@ ENV repository_name=${REPOSITORY_NAME}
 RUN apt-get update 
 RUN  apt-get install -y curl unzip jq
 RUN  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
-RUN  unzip awscliv2.zip 
+RUN  unzip -q awscliv2.zip 
 RUN  ./aws/install 
 RUN  rm -rf awscliv2.zip aws
 RUN  rm -rf /var/lib/apt/lists/*
