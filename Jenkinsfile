@@ -52,26 +52,9 @@ stage('Checkout') {
 }
 
 
-//        stage('Prepare parameters') {
-//            steps {
-//                script {
-//                    env.OAUTH2_VERSION = sh(script: "git describe --tags --always --abbrev=0 || echo ''", returnStdout: true).trim()
-//                    
-//                    if (env.OAUTH2_VERSION == '') {
-//                        echo 'Pipe message: No tag found. Skipping build.'
-//                        return
-//                    } else {
-//                        OAUTH2_VERSION = OAUTH2_VERSION.replace(/^v\.?/, '')
-//                        echo "Pipe message: Processed Tag: ${OAUTH2_VERSION}"
-//                    }
-//                    
-//                    COMMIT_AUTHOR_NAME = sh(script: "git log -n 1 ${env.GIT_COMMIT} --format=%aN", returnStdout: true).trim()
-//                    BUILD_TRIGGERED_BY = currentBuild.getBuildCauses()[0].shortDescription
-//                }
-//            }
-//        }
 
-         stage('Check OAUTH2 Version') {
+
+         stage('Handle OAUTH2 Version') {
             steps {
                 script {
                     env.OAUTH2_VERSION = sh(script: "git tag | tail -n1 || echo ''", returnStdout: true).trim()
@@ -79,7 +62,7 @@ stage('Checkout') {
                         echo 'Pipe message: No tag found. Skipping build.'
                         return
                     } else {
-                        OAUTH2_VERSION = OAUTH2_VERSION.replaceAll(/^v, '')
+                        OAUTH2_VERSION = OAUTH2_VERSION.replace(/^v\.?/, '')
                         echo "Pipe message: Processed Tag: ${OAUTH2_VERSION}"
                    }
                 }
