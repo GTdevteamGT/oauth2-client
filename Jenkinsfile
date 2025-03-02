@@ -1,7 +1,6 @@
 def CURRENT_DATE = new Date().format('yyyyMMdd')
 def COMMIT_AUTHOR_NAME = ''
 def BUILD_TRIGGERED_BY = ''
-//def OAUTH2_VERSION = '0.0.1'
 
 pipeline {
     agent {
@@ -62,7 +61,8 @@ stage('Checkout') {
                         echo 'Pipe message: No tag found. Skipping build.'
                         return
                     } else {
-                        OAUTH2_VERSION = OAUTH2_VERSION.replace(/^v\.?/, '')
+                        OAUTH2_VERSION_TMP = OAUTH2_VERSION.replace(/^v\.?/, '')
+                        env.OAUTH2_VERSION = OAUTH2_VERSION_TMP
                         echo "Pipe message: Processed Tag: ${OAUTH2_VERSION}"
                    }
                 }
