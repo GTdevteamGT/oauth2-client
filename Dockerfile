@@ -59,7 +59,7 @@ RUN git config --global user.email "nobody@nowhere.com"
 RUN git config --global user.name "John Doe"
 
 #Changing package version
-CMD ["npm", "version $OAUTH2_VERSION"]
+CMD ["npm", "version ${OAUTH2_VERSION}"]
 RUN npm version
 RUN npm install ; npm run prepublishOnly
 
@@ -71,5 +71,4 @@ RUN aws codeartifact login --tool npm --repository ${REPOSITORY_NAME} --domain g
 RUN HOST=$(echo ${REGISTRY_URL} | sed 's~https://~~') 
 RUN npm config set //"${HOST}":_authToken=${CODEARTIFACT_AUTH_TOKEN} 
 RUN npm config set registry ${REGISTRY_URL} 
-RUN npm unpublish --registry ${REGISTRY_URL}
 RUN npm publish --registry ${REGISTRY_URL}
