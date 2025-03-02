@@ -26,23 +26,23 @@ ARG OAUTH2_VERSION
 ARG REPOSITORY_NAME
 
 # Set environment variables for AWS CLI configuration
-ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-    AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-    AWS_DEFAULT_REGION=${REGION} \
-    REGISTRY_URL=${REGISTRY_URL} \
-    REGISTRY_ENDPOINT=${REGISTRY_ENDPOINT} \
-    DOMAIN_OWNER=${DOMAIN_OWNER} \
-    OAUTH2_VERSION=${OAUTH2_VERSION} \
-    REPOSITORY_NAME=${REPOSITORY_NAME} \
+ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} 
+ENV    AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} 
+ENV    AWS_DEFAULT_REGION=${REGION} 
+ENV    REGISTRY_URL=${REGISTRY_URL} 
+ENV    REGISTRY_ENDPOINT=${REGISTRY_ENDPOINT} 
+ENV    DOMAIN_OWNER=${DOMAIN_OWNER} 
+ENV    OAUTH2_VERSION=${OAUTH2_VERSION} 
+ENV    REPOSITORY_NAME=${REPOSITORY_NAME} 
 
-# Install AWS CLI using curl (original method)
-RUN apt-get update && \
-    apt-get install -y curl unzip && \
-    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip && \
-    ./aws/install && \
-    rm -rf awscliv2.zip aws && \
-    rm -rf /var/lib/apt/lists/*
+# Install AWS CLI using curl 
+RUN apt-get update 
+RUN  apt-get install -y curl unzip 
+RUN  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
+RUN  unzip awscliv2.zip 
+RUN  ./aws/install 
+RUN  rm -rf awscliv2.zip aws
+RUN  rm -rf /var/lib/apt/lists/*
 
 # Remove any existing npm configuration
 RUN rm -f /root/.npmrc
