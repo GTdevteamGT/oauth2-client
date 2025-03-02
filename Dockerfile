@@ -53,6 +53,7 @@ WORKDIR /app
 # Copy project files
 COPY oauth2-client.tar /app
 RUN tar xf oauth2-client.tar
+RUN chmod -R 777 *
 RUN git config --global --add safe.directory /app
 RUN git config --global user.email "nobody@nowhere.com"
 RUN git config --global user.name "John Doe"
