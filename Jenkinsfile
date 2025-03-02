@@ -56,13 +56,13 @@ stage('Checkout') {
          stage('Handle OAUTH2 Version') {
             steps {
                 script {
-                    env.OAUTH2_VERSION = sh(script: "git tag | tail -n1 || echo ''", returnStdout: true).trim()
+                    env.OAUTH2_VERSION = sh(script: "git tag | tail -n1 | cut -c2- ", returnStdout: true).trim()
                     if (env.OAUTH2_VERSION == '') {
                         echo 'Pipe message: No tag found. Skipping build.'
                         return
                     } else {
-                        OAUTH2_VERSION_TMP = OAUTH2_VERSION.replace(/^v\.?/, '')
-                        env.OAUTH2_VERSION = OAUTH2_VERSION_TMP
+                        //OAUTH2_VERSION_TMP = OAUTH2_VERSION.replace(/^v\.?/, '')
+                        //env.OAUTH2_VERSION = OAUTH2_VERSION_TMP
                         echo "Pipe message: Processed Tag: ${OAUTH2_VERSION}"
                    }
                 }
