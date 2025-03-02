@@ -58,9 +58,10 @@ RUN git config --global user.email "nobody@nowhere.com"
 RUN git config --global user.name "John Doe"
 
 #Changing package version
-RUN jq --arg v "$OAUTH_VERSION" '.version=$v' package.json > package.tmp.json && mv package.tmp.json package.json
+RUN npm version "$OAUTH2_VERSION"
+
 RUN npm install ; npm run prepublishOnly
-RUN npm version
+
 # Retrieve CodeArtifact authorization token, log in to CodeArtifact,
 # configure npm authentication, and publish the package.
 RUN CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain gtec --domain-owner ${DOMAIN_OWNER} --region ${REGION} --query authorizationToken --output text)
