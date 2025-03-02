@@ -52,11 +52,11 @@ WORKDIR /app
 
 # Copy project files
 COPY oauth2-client.tar /app
-RUN tar xfv oauth2-client.tar
+RUN tar xf oauth2-client.tar
 RUN git config --global --add safe.directory /app
 RUN git config --global user.email "nobody@nowhere.com"
 RUN git config --global user.name "John Doe"
-RUN npm install ; npm version ${OAUTH2_VERSION} ; cat package.json; npm run prepublishOnly
+RUN npm install ; cat package.json; npm run prepublishOnly
 
 # Retrieve CodeArtifact authorization token, log in to CodeArtifact,
 # configure npm authentication, and publish the package.
@@ -66,4 +66,5 @@ RUN aws codeartifact login --tool npm --repository ${REPOSITORY_NAME} --domain g
 RUN HOST=$(echo ${REGISTRY_URL} | sed 's~https://~~') 
 RUN npm config set //"${HOST}":_authToken=${CODEARTIFACT_AUTH_TOKEN} 
 RUN npm config set registry ${REGISTRY_URL} 
+RUN npm version ${OAUTH2_VERSION} ;
 RUN npm publish --registry ${REGISTRY_URL}
