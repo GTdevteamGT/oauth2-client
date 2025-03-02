@@ -59,7 +59,7 @@ RUN git config --global user.email "nobody@nowhere.com"
 RUN git config --global user.name "John Doe"
 
 #Changing package version
-CMD ["npm", "version ${OAUTH2_VERSION}"]
+RUN export OAUTH2_VERSION=${OAUTH2_VERSION}
 RUN npm version
 RUN npm install ; npm run prepublishOnly
 
