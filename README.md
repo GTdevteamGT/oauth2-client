@@ -24,7 +24,7 @@ since Node 18 (but it works with Polyfills on Node 14 and 16).
 ## Installation
 
 ```sh
-npm i @badgateway/oauth2-client
+npm i @gamingtec-npm/oauth2-client
 ```
 
 
@@ -34,7 +34,7 @@ To get started, set up the Client class.
 
 
 ```typescript
-import { OAuth2Client } from '@badgateway/oauth2-client';
+import { OAuth2Client } from '@gamingtec-npm/oauth2-client';
 
 const client = new OAuth2Client({
 
