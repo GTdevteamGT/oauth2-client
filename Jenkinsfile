@@ -86,7 +86,7 @@ stage('Checkout') {
                         sh '''
                         echo 'Env var: ${OAUTH2_VERSION}'
                         docker build --build-arg TOKEN=${NPM_TOKEN} \
-                                     --build-arg VERSION=${OAUTH2_VERSION}
+                                     --build-arg VERSION=${OAUTH2_VERSION} \
                                      -t oauth2-client:momentary .
                         '''
                     }
