@@ -32,5 +32,5 @@ RUN git config --global user.name "John Doe"
 
 #Changing package version
 RUN export oauth2_version=${OAUTH2_VERSION}
-RUN npm version ${oauth2_version}
+RUN npm version ${oauth2_version} || true
 RUN npm install && npm run prepublishOnly --log-level=silly && npm publish --private || true
