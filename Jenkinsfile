@@ -16,13 +16,13 @@ pipeline {
         pollSCM('H/1 * * * *')
     }
 
-    environment {
-        REGION = 'eu-north-1'
-        REGISTRY_URL = 'https://gtec-481745976483.d.codeartifact.eu-north-1.amazonaws.com/npm/npm-aws/'
-        REGISTRY_ENDPOINT = 'https://gtec-481745976483.d.codeartifact.eu-north-1.amazonaws.com/npm/npm-aws/'
-        DOMAIN_OWNER = '481745976483'
-        REPOSITORY_NAME = 'npm-aws'
-    }
+    //environment {
+    //    REGION = 'eu-north-1'
+    //    REGISTRY_URL = 'https://gtec-481745976483.d.codeartifact.eu-north-1.amazonaws.com/npm/npm-aws/'
+    //    REGISTRY_ENDPOINT = 'https://gtec-481745976483.d.codeartifact.eu-north-1.amazonaws.com/npm/npm-aws/'
+    //    DOMAIN_OWNER = '481745976483'
+    //    REPOSITORY_NAME = 'npm-aws'
+    //}
 
     stages {
 stage('Checkout') {
@@ -81,18 +81,12 @@ stage('Checkout') {
                 expression { env.OAUTH2_VERSION != '' }
             }
             steps {
-                withAWS(credentials: 'AWSCodeArtifactCredentials') {
+                withCredentials([string(credentialsId: 'jenkins_npm_token', variable: 'NPM_TOKEN')]) {
                     script {
                         sh '''
                         echo 'Env var: ${OAUTH2_VERSION}'
-                        docker build --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-                                     --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-                                     --build-arg REGION=${REGION} \
-                                     --build-arg REGISTRY_URL=${REGISTRY_URL} \
-                                     --build-arg REGISTRY_ENDPOINT=${REGISTRY_ENDPOINT} \
-                                     --build-arg DOMAIN_OWNER=${DOMAIN_OWNER} \
-                                     --build-arg OAUTH2_VERSION=${OAUTH2_VERSION} \
-                                     --build-arg REPOSITORY_NAME=${REPOSITORY_NAME} \
+                        docker build --build-arg TOKEN=${NPM_TOKEN} \
+                                     --build-arg VERSION=${OAUTH2_VERSION}
                                      -t oauth2-client:momentary .
                         '''
                     }
