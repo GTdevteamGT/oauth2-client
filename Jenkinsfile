@@ -1,7 +1,7 @@
 def CURRENT_DATE = new Date().format('yyyyMMdd')
 def COMMIT_AUTHOR_NAME = ''
 def BUILD_TRIGGERED_BY = ''
-
+def NPM_TOKEN = ''
 pipeline {
     agent {
         label 'docker-ci-stage'
