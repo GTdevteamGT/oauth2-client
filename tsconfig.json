@@ -9,7 +9,7 @@
         "noUnusedLocals": true,
 
         "moduleResolution": "node",
-        "sourceMap": true,
+        "sourceMap": false,
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
