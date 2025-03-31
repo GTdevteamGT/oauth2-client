@@ -19,8 +19,6 @@ export default [
       fallback: { 'crypto': false }
     },
 
-    devtool: 'source-map',
-
     module: {
       rules: [
         {
