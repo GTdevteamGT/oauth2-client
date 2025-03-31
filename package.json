@@ -1,5 +1,5 @@
 {
-  "name": "@gtdevteamgt/oauth2-client",
+  "name": "@gamingtec-npm/oauth2-client",
   "version": "1.0.0",
   "description": "OAuth2 client for browsers and Node.js oriented for the GaimngTec OAuth implementation https://gmntc.atlassian.net/wiki/spaces/SS/pages/319324165/Front+End. Tiny footprint, PKCE support.",
   "main": "dist/index.js",
