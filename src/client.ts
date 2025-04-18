@@ -275,9 +275,9 @@ export class OAuth2Client {
     token: OAuth2Token,
     tokenTypeHint: OAuth2TokenTypeHint = OAuth2TokenTypeHint.AccessToken,
   ): Promise<void> {
-    // Gamingtec implementation does stick to the standard.
+    // Gamingtec implementation does not stick to the standard.
     // Let it stay here for the future.
-    let tokenValue = token.external.token;
+    let tokenValue = token.internal.token;
 
     if (tokenTypeHint === OAuth2TokenTypeHint.RefreshToken) {
       tokenValue = token.internal.token;
