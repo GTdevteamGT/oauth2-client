@@ -35,7 +35,7 @@ pipeline {
 
             steps {
                 script {
-                    APPLICATION_VERSION = sendBuildNotifications.getApplicationVersionFromJson()
+                    APPLICATION_VERSION = readJSON(file: 'package.json').version
                     ARTIFACTORY_REPO = getArtifactoryRepo()
                     TAG = generateContainerImageTag.baseTag()
                     TAG_UNIQUE = generateContainerImageTag.uniqueTag()
@@ -79,10 +79,6 @@ pipeline {
                     setBuildDescription(TAG_UNIQUE)
                 }
             }
-
-            post {
-                always { sendBuildNotifications("build") }
-            }
         }
 
         stage('Deploy') {
@@ -91,6 +87,7 @@ pipeline {
                     expression { params.FORCE_BUILD && params.DEPLOY }
                 }
             }
+
             steps {
                 script {
                     TAG_DEPLOY = generateContainerImageTag.deployTag()
