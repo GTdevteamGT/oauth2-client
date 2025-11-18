@@ -19,11 +19,8 @@ pipeline {
 
     environment {
         SERVICE_NAME = "oauth2-client"
-        DOCKER_IMAGE_NAME = "${env.SERVICE_NAME}"
-        TAG = generateContainerImageTag.baseTag()
-        APPLICATION_VERSION = sendBuildNotifications.getApplicationVersionFromJson()
-        ARTIFACTORY_REPO = getArtifactoryRepo()
-        ARTIFACT_NAME = 'oauth2-client'
+        DOCKER_IMAGE_NAME = "oauth2-client"
+        ARTIFACT_NAME = "oauth2-client"
     }
 
     stages {
@@ -38,11 +35,14 @@ pipeline {
 
             steps {
                 script {
+                    APPLICATION_VERSION = sendBuildNotifications.getApplicationVersionFromJson()
+                    ARTIFACTORY_REPO = getArtifactoryRepo()
+                    TAG = generateContainerImageTag.baseTag()
                     TAG_UNIQUE = generateContainerImageTag.uniqueTag()
 
                     IMAGE = docker.build(
-                        "gtdevteam/${env.DOCKER_IMAGE_NAME}:${env.TAG}",
-                        "--build-arg VERSION=${env.APPLICATION_VERSION} " +
+                        "gtdevteam/${DOCKER_IMAGE_NAME}:${TAG}",
+                        "--build-arg VERSION=${APPLICATION_VERSION} " +
                         "--build-arg NODE_TAG=${params.NODE_TAG} " +
                         "--progress plain ."
                     )
@@ -55,20 +55,20 @@ pipeline {
 
                     sh "mkdir dist"
                     sh "cp package.tgz dist/"
-                    sh "tar -czf ${env.ARTIFACT_NAME}.tar.gz dist/"
+                    sh "tar -czf ${ARTIFACT_NAME}.tar.gz dist/"
 
                     rtUpload(
                         serverId: 'artifactory-server',
                         spec: """{
                             "files": [
                                 {
-                                    "pattern": "${env.ARTIFACT_NAME}.tar.gz",
-                                    "target": "${env.ARTIFACTORY_REPO}/com/npm/${env.ARTIFACT_NAME}/${env.ARTIFACT_NAME}.tar.gz",
+                                    "pattern": "${ARTIFACT_NAME}.tar.gz",
+                                    "target": "${ARTIFACTORY_REPO}/com/npm/${ARTIFACT_NAME}/${ARTIFACT_NAME}.tar.gz",
                                     "props": "type=tgz;status=ready"
                                 },
                                 {
-                                    "pattern": "${env.ARTIFACT_NAME}.tar.gz",
-                                    "target": "${env.ARTIFACTORY_REPO}/com/npm/${env.ARTIFACT_NAME}/${env.APPLICATION_VERSION}/${env.ARTIFACT_NAME}-${env.APPLICATION_VERSION}.tar.gz",
+                                    "pattern": "${ARTIFACT_NAME}.tar.gz",
+                                    "target": "${ARTIFACTORY_REPO}/com/npm/${ARTIFACT_NAME}/${APPLICATION_VERSION}/${ARTIFACT_NAME}-${APPLICATION_VERSION}.tar.gz",
                                     "props": "type=tgz;status=ready"
                                 }
                             ]
@@ -94,8 +94,9 @@ pipeline {
             steps {
                 script {
                     TAG_DEPLOY = generateContainerImageTag.deployTag()
+
                     build(
-                        job: "deploy_${env.SERVICE_NAME}",
+                        job: "deploy_${SERVICE_NAME}",
                         parameters: [
                             string(name: 'TAG', value: TAG_DEPLOY),
                             string(name: 'ENV', value: params.ENV)
