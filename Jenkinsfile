@@ -11,33 +11,16 @@ pipeline {
     }
 
     parameters {
-        booleanParam(
-            name: 'FORCE_BUILD',
-            defaultValue: false,
-            description: 'builds triggered automatically only for dev/master branches and tags'
-        )
-        booleanParam(
-            name: 'DEPLOY',
-            defaultValue: true,
-            description: 'deploy only for dev unless FORCE_BUILD is set'
-        )
-        choice(
-            name: 'ENV',
-            choices: ['dev', 'stage'],
-            description: 'environment to deploy'
-        )
-        string(
-            name: "NODE_TAG",
-            defaultValue: '20',
-            description: 'node image tag for building artifact'
-        )
+        booleanParam(name: 'FORCE_BUILD', defaultValue: false, description: '')
+        booleanParam(name: 'DEPLOY', defaultValue: true, description: '')
+        choice(name: 'ENV', choices: ['dev', 'stage'], description: '')
+        string(name: "NODE_TAG", defaultValue: '20', description: '')
     }
 
     environment {
         SERVICE_NAME = "oauth2-client"
         DOCKER_IMAGE_NAME = "${env.SERVICE_NAME}"
         TAG = generateContainerImageTag.baseTag()
-        TAG_UNIQUE = generateContainerImageTag.uniqueTag()
         TAG_DEPLOY = generateContainerImageTag.deployTag()
         APPLICATION_VERSION = sendBuildNotifications.getApplicationVersionFromJson()
         ARTIFACTORY_REPO = getArtifactoryRepo()
@@ -56,18 +39,19 @@ pipeline {
 
             steps {
                 script {
+                    TAG_UNIQUE = generateContainerImageTag.uniqueTag()
+
                     IMAGE = docker.build(
                         "gtdevteam/${env.DOCKER_IMAGE_NAME}:${env.TAG}",
                         "--build-arg VERSION=${env.APPLICATION_VERSION} " +
                         "--build-arg NODE_TAG=${params.NODE_TAG} " +
-                        "--progress plain " +
-                        "."
+                        "--progress plain ."
                     )
 
                     pushContainerImage(IMAGE)
 
-                    IMAGE.withRun("--name extract-from-${env.TAG_UNIQUE}") { c ->
-                        sh "docker cp extract-from-${env.TAG_UNIQUE}:/app/*.tgz ./package.tgz"
+                    IMAGE.withRun("--name extract-from-${TAG_UNIQUE}") { c ->
+                        sh "docker cp extract-from-${TAG_UNIQUE}:/app/*.tgz ./package.tgz"
                     }
 
                     sh "mkdir dist"
@@ -93,12 +77,14 @@ pipeline {
                     )
 
                     removeContainerImage(IMAGE.id)
-                    setBuildDescription(env.TAG_UNIQUE)
+                    setBuildDescription(TAG_UNIQUE)
                 }
             }
 
             post {
-                always { sendBuildNotifications("build") }
+                always {
+                    sendBuildNotifications("build")
+                }
             }
         }
 
@@ -123,6 +109,10 @@ pipeline {
     }
 
     post {
-        cleanup { cleanWs() }
+        cleanup {
+            node {
+                cleanWs()
+            }
+        }
     }
 }
