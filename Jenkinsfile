@@ -21,7 +21,6 @@ pipeline {
         SERVICE_NAME = "oauth2-client"
         DOCKER_IMAGE_NAME = "${env.SERVICE_NAME}"
         TAG = generateContainerImageTag.baseTag()
-        TAG_DEPLOY = generateContainerImageTag.deployTag()
         APPLICATION_VERSION = sendBuildNotifications.getApplicationVersionFromJson()
         ARTIFACTORY_REPO = getArtifactoryRepo()
         ARTIFACT_NAME = 'oauth2-client'
@@ -82,9 +81,7 @@ pipeline {
             }
 
             post {
-                always {
-                    sendBuildNotifications("build")
-                }
+                always { sendBuildNotifications("build") }
             }
         }
 
@@ -96,10 +93,11 @@ pipeline {
             }
             steps {
                 script {
+                    TAG_DEPLOY = generateContainerImageTag.deployTag()
                     build(
                         job: "deploy_${env.SERVICE_NAME}",
                         parameters: [
-                            string(name: 'TAG', value: env.TAG_DEPLOY),
+                            string(name: 'TAG', value: TAG_DEPLOY),
                             string(name: 'ENV', value: params.ENV)
                         ]
                     )
@@ -110,7 +108,9 @@ pipeline {
 
     post {
         cleanup {
-           cleanWs()
+            node('docker-ci-stage') {
+                cleanWs()
+            }
         }
     }
 }
